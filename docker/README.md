@@ -71,6 +71,7 @@ The API is documented using Swagger UI, which is available at `http://localhost:
   - `model_name` can be one of: `wals`, `bpr`, `factorization`, `top_items`, `implicit_bpr`, `implicit_wals`.
 
   **Request Body:**
+
   The request body requires an `embedding_dimension` and a `hyperparameters` dictionary containing the parameters for the specific model being trained.
 
   **Example for `wals` model:**
@@ -94,6 +95,7 @@ The API is documented using Swagger UI, which is available at `http://localhost:
       "learning_rate": 0.001,
       "regularization": 0.01
     }
+
   }
   ```
 
@@ -105,7 +107,9 @@ The API is documented using Swagger UI, which is available at `http://localhost:
     "mse": 0.809,
     "best_hyperparameters": {
       "epochs": 25,
+ 
       "regularization_coefficient": 0.00001,
+
       "c": 0.001
     }
   }

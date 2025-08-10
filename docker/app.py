@@ -50,7 +50,9 @@ class PrepareDataResponse(BaseModel):
 
 class TrainParams(BaseModel):
     embedding_dimension: int = 4
+ feat/containerize-tie-api
     hyperparameters: Dict[str, Any] = Field(..., example={"epochs": 25, "regularization_coefficient": 0.01})
+
 
 class TrainResponse(BaseModel):
     message: str
@@ -146,11 +148,14 @@ def train_model(model_name: str, params: TrainParams):
     try:
         mse = tie_engine.fit(**params.hyperparameters)
         state["trained_models"][model_name] = (tie_engine, params.hyperparameters)
+
         return {
             "message": f"Model '{model_name}' trained successfully.",
             "model_name": model_name,
             "mse": mse,
+ feat/containerize-tie-api
             "best_hyperparameters": params.hyperparameters,
+
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error during model training: {e}")
