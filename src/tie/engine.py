@@ -369,10 +369,3 @@ class TechniqueInferenceEngine:
         self._checkrep()
         return result_dataframe
 
-    def get_U(self) -> np.ndarray:
-        """Get the item embeddings of the model."""
-        return self._model.U
-
-    def get_V(self) -> np.ndarray:
-        """Get the user embeddings of the model."""
-        return self._model.V
