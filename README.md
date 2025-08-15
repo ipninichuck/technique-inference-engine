@@ -47,7 +47,7 @@ models, making predictions, and tuning hyperparameters.
 To train a model, use the `train` command:
 
 ```bash
-poetry run tie train --model <model_name> --dataset <path_to_dataset> --attack <path_to_attack_stix> --outfile <path_to_save_model>
+poetry run export-tie train --model <model_name> --dataset <path_to_dataset> --attack <path_to_attack_stix> --outfile <path_to_save_model>
 ```
 
 -   `<model_name>`: The name of the model to train (e.g., `wals`, `bpr`).
@@ -60,7 +60,7 @@ poetry run tie train --model <model_name> --dataset <path_to_dataset> --attack <
 To make predictions with a trained model, use the `predict` command:
 
 ```bash
-poetry run tie predict --model <path_to_trained_model> --techniques <technique_id_1> <technique_id_2> ...
+poetry run export-tie predict --model <path_to_trained_model> --techniques <technique_id_1> <technique_id_2> ...
 ```
 
 -   `<path_to_trained_model>`: Path to the trained model file.
@@ -71,7 +71,7 @@ poetry run tie predict --model <path_to_trained_model> --techniques <technique_i
 To tune the hyperparameters for a model, use the `tune` command:
 
 ```bash
-poetry run tie tune --model <model_name> --dataset <path_to_dataset> --attack <path_to_attack_stix>
+poetry run export-tie tune --model <model_name> --dataset <path_to_dataset> --attack <path_to_attack_stix>
 ```
 
 -   `<model_name>`: The name of the model to tune (e.g., `wals`, `bpr`).
