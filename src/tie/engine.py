@@ -51,6 +51,7 @@ class TechniqueInferenceEngine:
         model: Recommender,
         prediction_method: PredictionMethod,
         enterprise_attack_filepath: str,
+        hyperparameters: dict = None,
     ):
         """Initializes a TechniqueInferenceEngine object.
 
@@ -61,6 +62,7 @@ class TechniqueInferenceEngine:
             prediction_method: the method to use for predictions.
             enterprise_attack_filepath: filepath for the MITRE enterprise ATT&CK json
                 information.
+            hyperparameters: hyperparameters for the model.
         """
         self._enterprise_attack_filepath = enterprise_attack_filepath
 
@@ -69,6 +71,9 @@ class TechniqueInferenceEngine:
         self._test_data = test_data
         self._model = copy.deepcopy(model)
         self._prediction_method = prediction_method
+        if hyperparameters is None:
+            hyperparameters = {}
+        self._hyperparameters = hyperparameters
 
         self._checkrep()
 
@@ -349,8 +354,9 @@ class TechniqueInferenceEngine:
             indices=technique_indices_2d, values=values, dense_shape=(n,)
         )
 
+        all_kwargs = self._hyperparameters | kwargs
         predictions = self._model.predict_new_entity(
-            technique_tensor, method=self._prediction_method, **kwargs
+            technique_tensor, method=self._prediction_method, **all_kwargs
         )
 
         training_indices_dense = np.zeros(len(predictions))

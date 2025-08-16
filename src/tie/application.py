@@ -54,10 +54,13 @@ def train_model(
         model=model,
         prediction_method=prediction_method,
         enterprise_attack_filepath=enterprise_attack_filepath,
+        hyperparameters=hyperparameters,
     )
 
-    if "epochs" in hyperparameters:
-        tie.fit(**hyperparameters)
+    fit_hyperparameters = hyperparameters.copy()
+    fit_hyperparameters.pop("embedding_dimension", None)
+    if "epochs" in fit_hyperparameters:
+        tie.fit(**fit_hyperparameters)
     else:
         tie.fit()
 
@@ -119,6 +122,7 @@ def tune_hyperparameters(
         model=model,
         prediction_method=prediction_method,
         enterprise_attack_filepath=enterprise_attack_filepath,
+        hyperparameters={},
     )
 
     hyperparameters = get_hyperparameter_space(model_name)
