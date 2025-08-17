@@ -14,7 +14,15 @@ from tie.recommender import (
 
 
 def train_model(
-    model_name, dataset_filepath, enterprise_attack_filepath, validation_ratio, test_ratio
+    model_name,
+    dataset_filepath,
+    enterprise_attack_filepath,
+    validation_ratio,
+    test_ratio,
+    embedding_dimension=None,
+    epochs=None,
+    c=None,
+    regularization_coefficient=None,
 ):
     """
     Trains a recommender model.
@@ -25,6 +33,11 @@ def train_model(
         enterprise_attack_filepath (str): Path to the enterprise attack STIX file.
         validation_ratio (float): Percentage of data for validation.
         test_ratio (float): Percentage of data for testing.
+        embedding_dimension (int, optional): The embedding dimension for the model. Defaults to None.
+        epochs (int, optional): The number of epochs to train for. Defaults to None.
+        c (float, optional): The confidence weight for negative examples. Defaults to None.
+        regularization_coefficient (float, optional): The regularization coefficient. Defaults to None.
+
 
     Returns:
         TechniqueInferenceEngine: The trained Technique Inference Engine.
@@ -40,6 +53,15 @@ def train_model(
     model_class, prediction_method, hyperparameters = get_model_config(
         model_name, training_data.m, training_data.n
     )
+
+    if embedding_dimension is not None:
+        hyperparameters["embedding_dimension"] = embedding_dimension
+    if epochs is not None:
+        hyperparameters["epochs"] = epochs
+    if c is not None:
+        hyperparameters["c"] = c
+    if regularization_coefficient is not None:
+        hyperparameters["regularization_coefficient"] = regularization_coefficient
 
     model = model_class(
         m=training_data.m,

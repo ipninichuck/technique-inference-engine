@@ -27,6 +27,10 @@ def main():
     train_parser.add_argument("--outfile", required=True, help="Path to save the trained model.")
     train_parser.add_argument("--validation-ratio", type=float, default=0.1)
     train_parser.add_argument("--test-ratio", type=float, default=0.2)
+    train_parser.add_argument("--embedding-dimension", type=int, help="The embedding dimension for the model.")
+    train_parser.add_argument("--epochs", type=int, help="The number of epochs to train for.")
+    train_parser.add_argument("--c", type=float, help="The confidence weight for negative examples.")
+    train_parser.add_argument("--regularization-coefficient", type=float, help="The regularization coefficient.")
 
     # Predict command
     predict_parser = subparsers.add_parser("predict", help="Make predictions with a trained model.")
@@ -54,6 +58,10 @@ def main():
             args.attack,
             args.validation_ratio,
             args.test_ratio,
+            args.embedding_dimension,
+            args.epochs,
+            args.c,
+            args.regularization_coefficient,
         )
         with open(args.outfile, "wb") as f:
             pickle.dump(tie, f)
