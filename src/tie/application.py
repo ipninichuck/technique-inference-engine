@@ -23,6 +23,8 @@ def train_model(
     epochs=None,
     c=None,
     regularization_coefficient=None,
+    learning_rate=None,
+    gravity_coefficient=None,
 ):
     """
     Trains a recommender model.
@@ -37,6 +39,8 @@ def train_model(
         epochs (int, optional): The number of epochs to train for. Defaults to None.
         c (float, optional): The confidence weight for negative examples. Defaults to None.
         regularization_coefficient (float, optional): The regularization coefficient. Defaults to None.
+        learning_rate (float, optional): The learning rate for the model. Defaults to None.
+        gravity_coefficient (float, optional): The gravity coefficient for the factorization model. Defaults to None.
 
 
     Returns:
@@ -62,6 +66,10 @@ def train_model(
         hyperparameters["c"] = c
     if regularization_coefficient is not None:
         hyperparameters["regularization_coefficient"] = regularization_coefficient
+    if learning_rate is not None:
+        hyperparameters["learning_rate"] = learning_rate
+    if gravity_coefficient is not None:
+        hyperparameters["gravity_coefficient"] = gravity_coefficient
 
     model = model_class(
         m=training_data.m,

@@ -31,6 +31,8 @@ def main():
     train_parser.add_argument("--epochs", type=int, help="The number of epochs to train for.")
     train_parser.add_argument("--c", type=float, help="The confidence weight for negative examples.")
     train_parser.add_argument("--regularization-coefficient", type=float, help="The regularization coefficient.")
+    train_parser.add_argument("--learning-rate", type=float, help="The learning rate for the model.")
+    train_parser.add_argument("--gravity-coefficient", type=float, help="The gravity coefficient for the factorization model.")
 
     # Predict command
     predict_parser = subparsers.add_parser("predict", help="Make predictions with a trained model.")
@@ -62,6 +64,8 @@ def main():
             args.epochs,
             args.c,
             args.regularization_coefficient,
+            args.learning_rate,
+            args.gravity_coefficient,
         )
         with open(args.outfile, "wb") as f:
             pickle.dump(tie, f)
