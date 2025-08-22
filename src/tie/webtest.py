@@ -47,7 +47,10 @@ def load_model_from_zip(zip_path):
     # We need to create a dummy ReportTechniqueMatrix because the
     # TechniqueInferenceEngine requires it. We will not use it for training.
     dummy_matrix = ReportTechniqueMatrix(
-        report_ids=[], technique_ids=technique_ids, matrix=np.array([[]])
+        indices=((0, 0),),
+        values=(1,),
+        report_ids=["dummy_report"],
+        technique_ids=technique_ids,
     )
 
     tie = TechniqueInferenceEngine(
@@ -56,11 +59,14 @@ def load_model_from_zip(zip_path):
         test_data=dummy_matrix,
         model=model,
         prediction_method=prediction_method,
-        enterprise_attack_filepath="",  # Not needed for prediction
+        enterprise_attack_filepath="data/stix/enterprise-attack.json",
         hyperparameters=hyperparameters,
     )
 
     return tie
+
+
+import pickle
 
 
 def webtest(techniques, zip_path="src/tie-web-interface/public/app.trained.model.zip"):
@@ -75,4 +81,20 @@ def webtest(techniques, zip_path="src/tie-web-interface/public/app.trained.model
         pandas.DataFrame: A DataFrame with the predictions.
     """
     tie = load_model_from_zip(zip_path)
+    return tie.predict_for_new_report(frozenset(techniques))
+
+
+def webtest_pickle(techniques, pickle_path):
+    """
+    Predicts techniques for a given report using a pickled model.
+
+    Args:
+        techniques (list): A list of technique IDs.
+        pickle_path (str): The path to the pickle file.
+
+    Returns:
+        pandas.DataFrame: A DataFrame with the predictions.
+    """
+    with open(pickle_path, "rb") as f:
+        tie = pickle.load(f)
     return tie.predict_for_new_report(frozenset(techniques))

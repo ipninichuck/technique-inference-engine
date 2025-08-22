@@ -1,3 +1,3 @@
-from .webtest import webtest
+from .webtest import webtest, webtest_pickle
 
-__all__ = ["webtest"]
+__all__ = ["webtest", "webtest_pickle"]
