@@ -44,39 +44,67 @@ models, making predictions, and tuning hyperparameters.
 
 ### Training a Model
 
-To train a model, use the `train` command:
+To train a model, use the `train` command. For example, to train a `wals` model:
 
 ```bash
-poetry run export-tie train --model <model_name> --dataset <path_to_dataset> --attack <path_to_attack_stix> --outfile <path_to_save_model>
+poetry run export-tie train --model wals --dataset data/combined_dataset_full_frequency.json --attack data/stix/enterprise-attack.json --outfile wals_model.pkl
 ```
 
--   `<model_name>`: The name of the model to train (e.g., `wals`, `bpr`).
--   `<path_to_dataset>`: Path to the dataset file (e.g., `data/combined_dataset_full_frequency.json`).
--   `<path_to_attack_stix>`: Path to the enterprise attack STIX file (e.g., `data/stix/enterprise-attack.json`).
--   `<path_to_save_model>`: Path to save the trained model file.
+**Parameters:**
+
+-   `--model`: The name of the model to train. The available models are: `top_items`, `factorization`, `bpr`, `implicit_bpr`, `implicit_wals`, and `wals`.
+-   `--dataset`: Path to the dataset file.
+-   `--attack`: Path to the enterprise attack STIX file.
+-   `--outfile`: Path to save the trained model file.
+-   `--validation-ratio` (optional): The ratio of the dataset to use for validation. Defaults to `0.1`.
+-   `--test-ratio` (optional): The ratio of the dataset to use for testing. Defaults to `0.2`.
 
 ### Making Predictions
 
 To make predictions with a trained model, use the `predict` command:
 
 ```bash
-poetry run export-tie predict --model <path_to_trained_model> --techniques <technique_id_1> <technique_id_2> ...
+poetry run export-tie predict --model wals_model.pkl --techniques T1078.001 T1078.002
 ```
 
--   `<path_to_trained_model>`: Path to the trained model file.
--   `<technique_id_1> <technique_id_2> ...`: A list of technique IDs.
+**Parameters:**
+
+-   `--model`: Path to the trained model file.
+-   `--techniques`: A list of technique IDs.
 
 ### Tuning Hyperparameters
 
 To tune the hyperparameters for a model, use the `tune` command:
 
 ```bash
-poetry run export-tie tune --model <model_name> --dataset <path_to_dataset> --attack <path_to_attack_stix>
+poetry run export-tie tune --model wals --dataset data/combined_dataset_full_frequency.json --attack data/stix/enterprise-attack.json
 ```
 
--   `<model_name>`: The name of the model to tune (e.g., `wals`, `bpr`).
--   `<path_to_dataset>`: Path to the dataset file.
--   `<path_to_attack_stix>`: Path to the enterprise attack STIX file.
+**Parameters:**
+
+-   `--model`: The name of the model to tune (e.g., `wals`, `bpr`).
+-   `--dataset`: Path to the dataset file.
+-   `--attack`: Path to the enterprise attack STIX file.
+
+### Using the `webtest` function
+
+The `webtest` function provides a simple way to get predictions from a trained model in your Python code.
+
+```python
+from tie import webtest
+
+# A list of observed technique IDs
+techniques = ["T1078.001", "T1078.002", "T1078.003"]
+
+# Path to the trained model file
+model_path = "path/to/your/trained_model.pkl"
+
+# Get predictions
+predictions = webtest(techniques, model_path)
+
+# Print the top 10 predictions
+print(predictions.sort_values(by="predictions", ascending=False).head(10))
+```
 
 ## Getting Involved
 
