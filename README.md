@@ -86,24 +86,80 @@ poetry run export-tie tune --model wals --dataset data/combined_dataset_full_fre
 -   `--dataset`: Path to the dataset file.
 -   `--attack`: Path to the enterprise attack STIX file.
 
-### Using the `webtest` function
+### Using the REST API
 
-The `webtest` function provides a simple way to get predictions from a trained model in your Python code.
+The Technique Inference Engine provides a REST API for programmatic interaction.
 
-```python
-from tie import webtest
+#### Starting the API Server
 
-# A list of observed technique IDs
-techniques = ["T1078.001", "T1078.002", "T1078.003"]
+To start the API server, use the `api` command:
 
-# Path to the trained model file
-model_path = "path/to/your/trained_model.pkl"
+```bash
+poetry run export-tie api --host 127.0.0.1 --port 8000
+```
 
-# Get predictions
-predictions = webtest(techniques, model_path)
+This will start the server on the specified host and port. You can then access the interactive API documentation (Swagger UI) at `http://127.0.0.1:8000/docs`.
 
-# Print the top 10 predictions
-print(predictions.sort_values(by="predictions", ascending=False).head(10))
+#### API Endpoints
+
+The following endpoints are available:
+
+##### `POST /train`
+
+Trains a new model.
+
+**Parameters:**
+- `model` (string, required): The name of the model to train.
+- `dataset` (string, required): Path to the dataset file.
+- `attack` (string, required): Path to the enterprise attack STIX file.
+- `outfile` (string, required): Path to save the trained model file.
+- `validation_ratio` (float, optional): The ratio of the dataset to use for validation. Defaults to `0.1`.
+- `test_ratio` (float, optional): The ratio of the dataset to use for testing. Defaults to `0.2`.
+
+**Example:**
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+    "model": "wals",
+    "dataset": "data/combined_dataset_full_frequency.json",
+    "attack": "data/stix/enterprise-attack.json",
+    "outfile": "wals_model.pkl"
+}' http://127.0.0.1:8000/train
+```
+
+##### `POST /predict`
+
+Makes predictions with a trained model.
+
+**Parameters:**
+- `model_path` (string, required): Path to the trained model file.
+- `techniques` (array of strings, required): A list of technique IDs.
+
+**Example:**
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+    "model_path": "wals_model.pkl",
+    "techniques": ["T1078.001", "T1078.002"]
+}' http://127.0.0.1:8000/predict
+```
+
+##### `POST /tune`
+
+Tunes the hyperparameters for a model.
+
+**Parameters:**
+- `model` (string, required): The name of the model to tune.
+- `dataset` (string, required): Path to the dataset file.
+- `attack` (string, required): Path to the enterprise attack STIX file.
+- `validation_ratio` (float, optional): The ratio of the dataset to use for validation. Defaults to `0.1`.
+- `test_ratio` (float, optional): The ratio of the dataset to use for testing. Defaults to `0.2`.
+
+**Example:**
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+    "model": "wals",
+    "dataset": "data/combined_dataset_full_frequency.json",
+    "attack": "data/stix/enterprise-attack.json"
+}' http://127.0.0.1:8000/tune
 ```
 
 ## Getting Involved
