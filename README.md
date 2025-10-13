@@ -27,7 +27,7 @@ and [Poetry](https://python-poetry.org/) installed.
 1.  **Clone the repository:**
 
     ```bash
-    git clone https://github.com/center-for-threat-informed-defense/technique-inference-engine.git
+   git clone -b feat/rest-api https://github.com/ipninichuck/technique-inference-engine
     cd technique-inference-engine
     ```
 
